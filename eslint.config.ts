@@ -9,7 +9,7 @@ export default defineConfig([
   pluginVue.configs["flat/essential"],
   { files: ["**/*.vue"], languageOptions: { parserOptions: { parser: tseslint.parser } } },
     {
-    files: ["src/pages/**/*.vue", "src/layouts/**/*.vue", "src/app.vue", "src/error.vue"],
+    files: ["src/pages/**/*.vue", "src/components/**/*.vue", "src/layouts/**/*.vue", "src/app.vue", "src/error.vue"],
     rules: {
       "vue/multi-word-component-names": "off"
     }
