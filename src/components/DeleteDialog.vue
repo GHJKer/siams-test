@@ -30,21 +30,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useUserStore } from '../entities/user/model/useUserStore';
-interface Props {
-    userId: string;
-    }
+  interface Emits {
+    (e: 'confirm'): void;
+  }
+  const emit = defineEmits<Emits>();
 
-  const props = defineProps<Props>();
-  const store = useUserStore();
   const isDialogShow = defineModel<boolean>( { required: true })
 
-    function close() {
+  function close() {
     isDialogShow.value = false;
   }
 
   function deleteUser() {
-    store.removeUser(props.userId);
+    emit('confirm');
     close();
   }
 </script>

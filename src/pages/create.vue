@@ -59,12 +59,10 @@
       </v-row>
       <v-btn flat to="/" nuxt>To home page</v-btn>
       <v-btn flat nuxt type="submit">Add user</v-btn>
-      <alert v-model="isShowAlert" :title="alertTitle" :text="alertText" :type="'success'"/>
     </v-container>
   </v-form>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useCreate } from '../composables/useCreate';
 import type { VForm } from 'vuetify/components';
 import {
@@ -73,7 +71,7 @@ import {
   emailRules,
   phoneRules,
 } from '../shared/validation/rules';
-import alert from '../components/alert.vue';
+import { useSnackbarStore } from '../entities/snackbar/useSnackBarStore';
 
 const {
   fullName,
@@ -83,17 +81,26 @@ const {
   addUserFunc,
 } = useCreate();
 
-const isShowAlert = ref(false);
-const alertText = ref('New user has just been added!');
-const alertTitle = ref('Success!');
+const snackbar = useSnackbarStore();
 const formRef = useTemplateRef<typeof VForm | null>('formRef');
 
   async function addUser() {
     if (!formRef.value) return;
     const { valid: isValid } = await formRef.value.validate();
-    if (!isValid) return;
-    isShowAlert.value = true;
+    if (!isValid) {
+      snackbar.show({
+        title: 'Error',
+        text: 'The form must be valid',
+        type: 'error'
+      })
+      return;
+    };
     addUserFunc();
+    snackbar.show({
+      title: 'Success',
+      text: 'User has been deleted',
+      type: 'success'
+    })
     formRef.value.reset();
   }
 

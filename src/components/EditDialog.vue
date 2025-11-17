@@ -93,6 +93,7 @@
   import { computed } from 'vue';
   import { useUserStore } from '../entities/user/model/useUserStore';
   import type { VForm } from 'vuetify/components';
+  import { useSnackbarStore } from '../entities/snackbar/useSnackBarStore';
 
   import {
     nameRules,
@@ -104,8 +105,13 @@
   interface Props {
     userId: string;
   }
+  interface Emits {
+    (e: 'confirmEdit'): void;
+  }
 
+  const snackbar = useSnackbarStore();
   const props = defineProps<Props>();
+  const emit = defineEmits<Emits>();
   const store = useUserStore();
   const user = computed(() => store.list.find(u => u.id === props.userId));
   const isDialogShow = defineModel<boolean>( { required: true });
@@ -118,12 +124,24 @@
 
   function close() {
     isDialogShow.value = false;
+
+    fullName.value = '';
+    dateOfBirth.value = '';
+    email.value = '';
+    phone.value = '';
   }
 
   async function save() {
     if (!formRef.value) return;
     const { valid: isValid } = await formRef.value.validate();
-    if (!isValid) return;
+    if (!isValid) {
+      snackbar.show({
+        title: 'Error',
+        text: 'User data must be valid',
+        type: 'error'
+      })
+      return;
+    };
     const updatedUser = {
       fullName: fullName.value,
       dateOfBirth: dateOfBirth.value,
@@ -131,6 +149,7 @@
       phone: phone.value,
     }
     store.editUser(props.userId, updatedUser);
+    emit('confirmEdit');
     close();
   }
 

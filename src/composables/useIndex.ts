@@ -5,9 +5,6 @@ import { useUserStore } from '../entities/user/model/useUserStore';
 export function useIndex() {
     const store = useUserStore();
     const search = ref('');
-    const isShowSnackBar = ref(false);
-    const snackBarTitle = ref('Success!');
-    const snackBarText = ref('The has been edited');
     const headers = [
         { key: 'fullName', title: 'Ful name' },
         { key: 'dateOfBirth', title: 'Date of birth' },
@@ -22,8 +19,5 @@ export function useIndex() {
         search,
         headers,
         userList,
-        isShowSnackBar,
-        snackBarTitle,
-        snackBarText,
     }
 }
