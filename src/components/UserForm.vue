@@ -15,19 +15,18 @@
             required
           />
         </v-col>
-
         <v-col
           cols="12"
           md="3"
         >
-          <v-text-field
-            v-model="model.dateOfBirth"
+          <v-date-input
+            v-model="dateModel"
             :rules="birthDateRules"
-            label="Date of birth"
-            required
+            :display-format="format"
+            label="Birth date"
+            max-width="368"
           />
         </v-col>
-
         <v-col
           cols="12"
           md="3"
@@ -39,14 +38,13 @@
             required
           />
         </v-col>
-
-
         <v-col
           cols="12"
           md="3"
         >
           <v-text-field
             v-model="model.phone"
+            v-mask="'+7 (###) ###-##-##'"
             :rules="phoneRules"
             label="Phone number"
             required
@@ -57,28 +55,50 @@
   </v-form>
 </template>
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
-import {
-  nameRules,
-  birthDateRules,
-  emailRules,
-  phoneRules,
-} from '../shared/validation/rules';
-import type { User } from '../entities/user/types/user'
+  import { computed } from 'vue';
+  import { useDate } from 'vuetify';
+  import type { VForm } from 'vuetify/components';
+  import {
+    nameRules,
+    emailRules,
+    phoneRules,
+    birthDateRules,
+  } from '../shared/validation/rules';
+  import type { User } from '../entities/user/types/user'
+  import { mask } from 'vue-the-mask';
 
-    const model = defineModel<Omit<User, 'id'>>({required: true});
-    const formRef = useTemplateRef<typeof VForm | null>('formRef');
+  const vMask = mask;
+  const model = defineModel<Omit<User, 'id'>>({required: true});
+  const formRef = useTemplateRef<typeof VForm | null>('formRef');
+  const adapter = useDate();
 
-    async function validate() {
-        if (!formRef.value) return false;
-        const { valid } = await formRef.value.validate();
-        return valid;
+  function format (date: unknown) {
+    return adapter.toISO(date);
+  }
+
+  const dateModel = computed<string | Date | null>({
+    get() {
+      return model.value.dateOfBirth || null;
+    },
+    set(value: string | Date | null) {
+      if (value instanceof Date) {
+        model.value.dateOfBirth = adapter.toISO(value);
+      } else {
+        model.value.dateOfBirth = value || '';
+      }
     }
+  });
 
-    function reset() {
-        if (!formRef.value) return false;
-        return formRef.value.reset();
-    }
+  async function validate() {
+    if (!formRef.value) return false;
+    const valid = await formRef.value.validate();
+    return valid;
+  }
 
-    defineExpose({validate, reset});
+  function reset() {
+    if (!formRef.value) return false;
+    return formRef.value.reset();
+  }
+
+  defineExpose({validate, reset});
 </script>

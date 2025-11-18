@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <UserForm ref="userFormRef" v-model="formData" />
-
     <div class="mt-4">
       <v-btn flat to="/" nuxt>To home page</v-btn>
       <v-btn flat @click="handleAddUser">Add user</v-btn>
@@ -25,7 +24,8 @@ const userFormRef = useTemplateRef<typeof VForm | null>('userFormRef');
   async function handleAddUser() {
     if (!userFormRef.value) return;
     const isValid = await userFormRef.value.validate();
-    if (!isValid) {
+
+    if (!isValid.valid) {
       snackbar.show({
         title: 'Error',
         text: 'The form must be valid',

@@ -82,7 +82,7 @@
   async function save() {
     if (!userFormRef.value) return;
     const isValid  = await userFormRef.value.validate();
-    if (!isValid) {
+    if (!isValid.valid) {
       snackbar.show({
         title: 'Error',
         text: 'User data must be valid',

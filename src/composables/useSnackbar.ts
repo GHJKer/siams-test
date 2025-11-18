@@ -4,17 +4,6 @@ export function useSnackbar() {
   const text = ref('');
   const color = ref('success');
 
-  // const show = (options: {
-  //   title: string;
-  //   text: string;
-  //   type?: 'success' | 'error' | 'warning' | 'info';
-  // }) => {
-  //   title.value = options.title;
-  //   text.value = options.text;
-  //   color.value = options.type || 'success';
-  //   isShow.value = true;
-  // };
-
   function show(options: {
     title: string;
     text: string;
