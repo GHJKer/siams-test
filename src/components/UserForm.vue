@@ -65,9 +65,7 @@
     birthDateRules,
   } from '../shared/validation/rules';
   import type { User } from '../entities/user/types/user'
-  import { mask } from 'vue-the-mask';
 
-  const vMask = mask;
   const model = defineModel<Omit<User, 'id'>>({required: true});
   const formRef = useTemplateRef<typeof VForm | null>('formRef');
   const adapter = useDate();
