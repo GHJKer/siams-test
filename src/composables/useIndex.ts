@@ -18,15 +18,17 @@ export function useIndex() {
 	const initialUserList: User[] = [
 		{ fullName: 'Иванов Иван Иванович', dateOfBirth: '1990-05-15', email: 'ivanov@example.com', phone: '+7-999-123-45-67', id: ''},
 		{ fullName: 'Петрова Анна Сергеевна', dateOfBirth: '1985-12-03', email: 'petrova@example.com', phone: '+7-999-234-56-78', id: ''},
-		{ fullName: 'Сидоров Алексей Петрович', dateOfBirth: '1995-07-22', email: 'sidorov@example.com', phone: '+7-999-345-67-89,',id: '' }
+		{ fullName: 'Сидоров Алексей Петрович', dateOfBirth: '1995-07-22', email: 'sidorov@example.com', phone: '+7-999-345-67-89',id: '' }
 	]
 
 	const userList = storeToRefs(store).list;
 
 	function populateList() {
 		for (const user of initialUserList) {
-			user.id = uuidv4();
-			store.addUser(user);
+			store.addUser({
+				...user,
+				id: uuidv4(),
+			});
 		}
 	}
 

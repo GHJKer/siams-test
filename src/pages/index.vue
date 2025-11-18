@@ -2,12 +2,12 @@
   <div>
     <v-container>
       <v-card
-          flat
+        flat
       >
         <template v-slot:text>
             <DebouncedInput
-                v-model="search"
-                :debounce-time="500"
+              v-model="search"
+              :debounce-time="500"
             />
         </template>
 
@@ -18,15 +18,36 @@
         >
           <template v-slot:item.actions="{ item }">
             <div class="d-flex ga-2 justify-end">
-            <v-icon color="medium-emphasis" icon="mdi-pencil" size="small" @click="openEditDialog(item.id)"></v-icon>
-
-            <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="openDeleteDialog(item.id)"></v-icon>
+            <v-icon
+              color="medium-emphasis"
+              icon="mdi-pencil"
+              size="small"
+              @click="openEditDialog(item.id)"
+            />
+            <v-icon
+              color="medium-emphasis"
+              icon="mdi-delete"
+              size="small"
+              @click="openDeleteDialog(item.id)"
+            />
             </div>
           </template>
         </v-data-table>
       </v-card>
-      <v-btn flat to="/create" nuxt>To create user page</v-btn>
-      <v-btn flat @click="populateList" nuxt>Populate</v-btn>
+      <v-btn
+        flat
+        to="/create"
+        nuxt
+      >
+      To create user page
+      </v-btn>
+      <v-btn
+        flat
+        @click="populateList"
+        nuxt
+      >
+      Populate
+      </v-btn>
     </v-container>
     <EditDialog
       v-model="isEditOpen"
