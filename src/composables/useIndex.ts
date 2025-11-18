@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useUserStore } from '../entities/user/model/useUserStore';
+import { useUserStore } from '../entities/user/store/useUserStore';
 
 export function useIndex() {
     const store = useUserStore();

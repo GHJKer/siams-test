@@ -50,7 +50,7 @@ import { useIndex } from '../composables/useIndex'
 import EditDialog from '../components/EditDialog.vue'
 import DeleteDialog from '../components/DeleteDialog.vue'
 import { useSnackbarStore } from '../entities/snackbar/useSnackBarStore';
-import { useUserStore } from '../entities/user/model/useUserStore';
+import { useUserStore } from '../entities/user/store/useUserStore';
 
 const snackbar = useSnackbarStore();
 const store = useUserStore();

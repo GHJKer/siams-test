@@ -1,28 +1,25 @@
-import { useUserStore } from '../entities/user/model/useUserStore';
+import { useUserStore } from '../entities/user/store/useUserStore';
+import type { User } from '../entities/user/types/user'
 import { v4 as uuidv4 } from 'uuid';
 
 export function useCreate() {
   const store = useUserStore();
-  const fullName = ref('');
-  const dateOfBirth = ref('');
-  const phone = ref('');
-  const email = ref('');
+    const formData = ref<Omit<User, 'id'>>({
+      fullName: '',
+      dateOfBirth: '',
+      email: '',
+      phone: '',
+    });
 
   async function addUserFunc() {
     store.addUser({
-      fullName: fullName.value,
-      dateOfBirth: dateOfBirth.value,
-      email: email.value,
-      phone: phone.value,
+      ...formData.value,
       id: uuidv4(),
     })
   }
 
   return {
-    fullName,
-    dateOfBirth,
-    phone,
-    email,
+    formData,
     addUserFunc,
   }
 }

@@ -4,65 +4,15 @@
       v-model="isDialogShow"
       max-width="800"
     >
-    <v-form ref="formRef">
       <v-card
         prepend-icon="mdi-account"
         title="User"
       >
         <v-card-text>
-          <v-row dense>
-            <v-col
-              cols="12"
-              md="3"
-              sm="6"
-            >
-              <v-text-field
-                v-model="fullName"
-                label="Full name*"
-                required
-                :rules="nameRules"
-              ></v-text-field>
-            </v-col>
-            <v-col
-              cols="12"
-              md="3"
-              sm="6"
-            >
-              <v-text-field
-                v-model="dateOfBirth"
-                label="Date of birth*"
-                required
-                :rules="birthDateRules"
-              ></v-text-field>
-            </v-col>
-
-            <v-col
-              cols="12"
-              md="3"
-              sm="6"
-            >
-              <v-text-field
-                v-model="email"
-                label="Email*"
-                required
-                :rules="emailRules"
-              ></v-text-field>
-            </v-col>
-
-            <v-col
-              cols="12"
-              md="3"
-              sm="6"
-            >
-              <v-text-field
-                v-model="phone"
-                label="Phone number*"
-                required
-                :rules="phoneRules"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
+          <UserForm
+            ref="userFormRef"
+            v-model="formData"
+          />
           <small class="text-caption text-medium-emphasis">*indicates required field</small>
         </v-card-text>
 
@@ -85,22 +35,15 @@
           ></v-btn>
         </v-card-actions>
       </v-card>
-    </v-form>
     </v-dialog>
   </div>
 </template>
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { useUserStore } from '../entities/user/model/useUserStore';
-  import type { VForm } from 'vuetify/components';
+  import UserForm from '../components/UserForm.vue';
+  import { useUserStore } from '../entities/user/store/useUserStore';
   import { useSnackbarStore } from '../entities/snackbar/useSnackBarStore';
-
-  import {
-    nameRules,
-    birthDateRules,
-    emailRules,
-    phoneRules,
-  } from '../shared/validation/rules';
+  import type { VForm } from 'vuetify/components';
 
   interface Props {
     userId: string;
@@ -115,25 +58,30 @@
   const store = useUserStore();
   const user = computed(() => store.list.find(u => u.id === props.userId));
   const isDialogShow = defineModel<boolean>( { required: true });
-  const formRef = useTemplateRef<typeof VForm | null>('formRef');
+  const userFormRef = useTemplateRef<typeof VForm | null>('userFormRef');
 
-  const fullName = ref('');
-  const dateOfBirth = ref('');
-  const email = ref('');
-  const phone = ref('');
+  const formData = ref({
+    fullName: '',
+    dateOfBirth: '',
+    email: '',
+    phone: '',
+  });
 
   function close() {
     isDialogShow.value = false;
 
-    fullName.value = '';
-    dateOfBirth.value = '';
-    email.value = '';
-    phone.value = '';
+    formData.value = {
+      fullName: '',
+      dateOfBirth: '',
+      email: '',
+      phone: '',
+    };
+    userFormRef.value?.reset();
   }
 
   async function save() {
-    if (!formRef.value) return;
-    const { valid: isValid } = await formRef.value.validate();
+    if (!userFormRef.value) return;
+    const isValid  = await userFormRef.value.validate();
     if (!isValid) {
       snackbar.show({
         title: 'Error',
@@ -142,23 +90,17 @@
       })
       return;
     };
-    const updatedUser = {
-      fullName: fullName.value,
-      dateOfBirth: dateOfBirth.value,
-      email: email.value,
-      phone: phone.value,
-    }
-    store.editUser(props.userId, updatedUser);
+    store.editUser(props.userId, formData.value);
     emit('confirmEdit');
     close();
   }
 
   watch(isDialogShow, (val) => {
     if (val && user.value) {
-      fullName.value = user.value.fullName
-      dateOfBirth.value = user.value.dateOfBirth
-      email.value = user.value.email
-      phone.value = user.value.phone
+      formData.value.fullName = user.value.fullName
+      formData.value.dateOfBirth = user.value.dateOfBirth
+      formData.value.email = user.value.email
+      formData.value.phone = user.value.phone
     }
   })
 </script>
